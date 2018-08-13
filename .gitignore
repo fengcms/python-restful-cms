@@ -1,0 +1,12 @@
+.DS_Store
+*.swp
+shell/password.txt
+fanyi/config.py
+passwd.db
+resize-image/image
+resize-image/target-image
+__pycache__
+nohup.out
+
+/news/
+/news_bak/
