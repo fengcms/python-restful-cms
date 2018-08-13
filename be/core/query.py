@@ -39,6 +39,14 @@ def getFieldList(Obj):
             res.append(i)
     return res
 
+
+# 检查提交数据字段是否在表中包含方法
+def checkField(dat, fields):
+    for i in dat:
+        if not i in fields:
+            return False
+    return True
+
 # 查询列表方法
 def ls(className, request):
     if not hasClass(className):
@@ -184,12 +192,19 @@ def post(className, request):
         classModel = getattr(model, className)
         modelDict = getFieldDict(classModel)
         resIds = []
+
+        fields = getFieldList(classModel)
+        for Data in request['data']:
+            # 检查数据是否符合模型字段要求
+            if not checkField(i, fields):
+                return 400
+            # 提交数据时禁止包含 id 字段
+            if 'id' in Data:
+                return 400
+
         for Data in request['data']:
             for i in Data:
-                if i in modelDict:
-                    modelDict[i] = Data[i]
-                else:
-                    return 400
+                modelDict[i] = Data[i]
             newData = classModel(**modelDict)
             session.add(newData)
             session.flush()
@@ -269,11 +284,6 @@ def put(className, oid, data):
         else:
             failIds.append(id)
 
-    # 检查提交数据字段是否在表中包含方法
-    def checkField(dat, fields):
-        for i in dat:
-            if not i in fields:
-                return 400
     try:
         classModel = getattr(model, className)
         res = session.query(classModel)
@@ -282,7 +292,9 @@ def put(className, oid, data):
 
         # 处理不知道ID的单条数据修改
         if oid == 'first':
-            checkField(data, fields)
+            if not checkField(i, fields):
+                return 400
+
             putData(res.first(), -1)
         # 处理多条数据批量修改
         elif oid == 'batch':
@@ -290,7 +302,9 @@ def put(className, oid, data):
                 return 400
             dat = data['data']
             for i in dat:
-                checkField(i, fields)
+                if not checkField(i, fields):
+                    return 400
+
                 if not 'id' in i:
                     return 400
             for i in dat:
@@ -298,7 +312,9 @@ def put(className, oid, data):
 
         # 处理正常单条数据单ID或多ID批量修改
         else:
-            checkField(data, fields)
+            if not checkField(i, fields):
+                return 400
+
             idArr = oid.split(',')
             for id in idArr:
                 putData(res.get(id), int(id))
