@@ -193,13 +193,10 @@ def post(className, request):
         modelDict = getFieldDict(classModel)
         resIds = []
 
+        # 检查数据是否符合模型字段要求
         fields = getFieldList(classModel)
         for Data in request['data']:
-            # 检查数据是否符合模型字段要求
             if not checkField(i, fields):
-                return 400
-            # 提交数据时禁止包含 id 字段
-            if 'id' in Data:
                 return 400
 
         for Data in request['data']:
