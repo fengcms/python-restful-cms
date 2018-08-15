@@ -2,6 +2,7 @@
 # -*- coding: UTF-8 -*-
 import hashlib
 import time
+import random
 import os
 from core.tool import getMd5
 
@@ -10,7 +11,8 @@ TEMPPATH = 'temp/'
 def makeSession (user, group, session=None):
     t = str(int(time.time()))
     if session == None:
-        data = user + t
+        r = str(random.randint(10000, 99999))
+        data = user + t + r
         session = getMd5(data)
     sessionPath = TEMPPATH + group + '_' + getMd5(user)
     os.system('echo ' + session + ',' + t + ' > ' + sessionPath)
