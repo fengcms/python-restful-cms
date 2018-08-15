@@ -65,7 +65,7 @@ async def login(request):
                 del res.cookies['session']
                 return res
             else:
-                session = makeSession(req['account'])
+                session = makeSession(req['account'], 'manage')
                 res = ok('登录成功')
                 res.cookies['session'] = session
                 res.cookies['session']['httponly'] = True

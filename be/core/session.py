@@ -7,22 +7,23 @@ from core.tool import getMd5
 
 TEMPPATH = 'temp/'
 
-def makeSession (user, session=None):
+def makeSession (user, group, session=None):
     t = str(int(time.time()))
     if session == None:
         data = user + t
         session = getMd5(data)
-    sessionPath = TEMPPATH + getMd5(user)
+    sessionPath = TEMPPATH + group + '_' + getMd5(user)
     os.system('echo ' + session + ',' + t + ' > ' + sessionPath)
-    return user + '|' + session
+    return user + '|' + group + '|' + session
 
 def checkSession (session):
     if session == None:
         return 4
     tmp = session.split('|')
     user = tmp[0]
-    session = tmp[1]
-    sessionPath = TEMPPATH + getMd5(user)
+    group = tmp[1]
+    session = tmp[2]
+    sessionPath = TEMPPATH + group + '_' + getMd5(user)
     if os.path.exists(sessionPath):
         with open(sessionPath, 'r') as f:
             saveText = str(f.read()).split(',')
@@ -40,11 +41,15 @@ def checkSession (session):
         return 4
 
 def clearSession (session):
-    sessionPath = TEMPPATH + getMd5(session.split('|')[0])
+    tmp = session.split('|')
+    user = tmp[0]
+    group = tmp[1]
+    sessionPath = TEMPPATH + group + '_' + getMd5(user)
     os.system('rm ' + sessionPath)
 
 def updataSession (session):
     tmp = session.split('|')
     user = tmp[0]
-    session = tmp[1]
-    o = makeSession(user, session)
+    group = tmp[1]
+    session = tmp[2]
+    o = makeSession(user, group, session)
