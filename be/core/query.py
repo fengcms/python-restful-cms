@@ -196,7 +196,7 @@ def post(className, request):
         # 检查数据是否符合模型字段要求
         fields = getFieldList(classModel)
         for Data in request['data']:
-            if not checkField(i, fields):
+            if not checkField(Data, fields):
                 return 400
 
         for Data in request['data']:

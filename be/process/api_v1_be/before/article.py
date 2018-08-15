@@ -37,4 +37,11 @@ async def post (request):
         if i.get('description') == None or i.get('description') == '':
             i['description'] = filterHtml(i['content'])[0:200].replace('\n', '')
 
+        if i.get('hits') == None or i.get('hits') == '':
+            i['hits'] = 0
+
+        if i.get('isdelete') == None or i.get('hits') == '':
+            i['isdelete'] = 'NO'
+
+
         

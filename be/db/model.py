@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
-from sqlalchemy import Column, Integer, String, Text, create_engine
+from sqlalchemy import Column, Integer, String, Text, text, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import time
@@ -31,6 +31,8 @@ class Article(Base):
     author = Column(String(255, 0))
     origin = Column(String(255, 0))
     editor = Column(String(255, 0))
+    hits = Column(Integer)
+    isdelete = Column(String(255))
     time = Column(Integer, default=int(time.time()))
 
 class Channel(Base):
@@ -39,6 +41,7 @@ class Channel(Base):
     id = Column(Integer, primary_key=True)
     pid = Column(Integer)
     name = Column(String(255), nullable=False)
+    sort = Column(Integer)
     keywords = Column(Text)
     description = Column(Text)
     time = Column(Integer, default=int(time.time()))
@@ -50,6 +53,9 @@ class Manages(Base):
     id = Column(Integer, primary_key=True)
     username = Column(String(255), nullable=False)
     password = Column(Text, nullable=False)
+    name = Column(String(255), nullable=False)
+    mobile = Column(String(255))
+    email = Column(String(255))
     time = Column(Integer, default=int(time.time()))
 
 class Site(Base):
@@ -66,7 +72,7 @@ class Site(Base):
 
 class Author(Base):
     __tablename__ = 'author'
-    
+
     id = Column(Integer, primary_key=True)
     name = Column(String(255), nullable=False)
     mobile = Column(String(255))
@@ -112,7 +118,13 @@ metadata.create_all(engine)
 
 # 如果没有默认管理员，则添加上(默认密码123456)
 if len(session.query(Manages).all()) == 0:
-    defManage = Manages(username = 'admin', password = rsaEncrypt(KEY_PATH, '123456'))
+    defManage = Manages(
+                username = 'admin',
+                password = rsaEncrypt(KEY_PATH, '123456'),
+                name = 'admin',
+                mobile = '188888888',
+                email = 'web@web.com'
+            )
     session.add(defManage)
     session.commit()
 
