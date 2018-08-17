@@ -2,11 +2,12 @@
 # -*- coding: UTF-8 -*-
 from sanic import Blueprint
 from sanic.response import json
-from config import PREFIX
+from config import PREFIX, ANONYMOUS_API as ANYAPI
 
 from core.tool import ok, fail, checkParam
 from core.session import makeToken, checkToken, clearToken, updataToken
 from core.app import listView, itemView
+from core.handle import middleHandle
 
 FIX = PREFIX['be']
 # 创建 蓝图
@@ -15,6 +16,12 @@ bp = Blueprint('be', url_prefix=FIX)
 # 加载默认 rest 接口生成路由
 bp.add_route(listView.as_view(), '<name>')
 bp.add_route(itemView.as_view(), '<name>/<oid>')
+
+@bp.middleware('request')
+async def check(request):
+    rep = middleHandle(request, FIX, ANYAPI)
+    if rep:
+        return rep
 
 # 登录接口
 @bp.route('login', methods=['POST'])
