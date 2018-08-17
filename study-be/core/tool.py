@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 from sanic.response import json
+import hashlib
 
 # 成功返回
 def ok(data):
@@ -22,3 +23,12 @@ def checkParam(params, req):
             return False
 
     return True
+
+# 获取 md5 哈希值
+def getMd5(source):
+    if isinstance(source, str):
+        source = source.encode('utf-8')
+    m1 = hashlib.md5()
+    m1.update(source)
+    res = m1.hexdigest()
+    return res
