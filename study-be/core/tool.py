@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 from sanic.response import json
+from urllib.parse import unquote
 import hashlib
 
 # 成功返回
@@ -32,3 +33,12 @@ def getMd5(source):
     m1.update(source)
     res = m1.hexdigest()
     return res
+
+# 处理参数
+def query2Dict(text):
+    try:
+        text = unquote(text)
+        obj = dict([i.split('=') for i in text.split('&')]) 
+        return obj
+    except Exception as e:
+        return {}

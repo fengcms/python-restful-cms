@@ -6,10 +6,15 @@ from config import PREFIX
 
 from core.tool import ok, fail, checkParam
 from core.session import makeToken, checkToken, clearToken, updataToken
+from core.app import listView, itemView
 
 FIX = PREFIX['be']
 # 创建 蓝图
 bp = Blueprint('be', url_prefix=FIX)
+
+# 加载默认 rest 接口生成路由
+bp.add_route(listView.as_view(), '<name>')
+bp.add_route(itemView.as_view(), '<name>/<oid>')
 
 # 登录接口
 @bp.route('login', methods=['POST'])
