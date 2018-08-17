@@ -30,3 +30,33 @@ def post (request, name):
         return fail('数据添加失败', 503)
     else:
         return fail('服务器内部错误', 500, 500)
+
+def get (request, name, oid):
+    hmupName = str2Hump(name)
+    res = query.get(hmupName, oid)
+    if isinstance(res, dict):
+        return ok(res)
+    elif res == 404:
+        return fail('数据库中没有' + name + '这个表', 404)
+    elif res == 4042:
+        return fail('没有这条数据', 404)
+    elif res == 4043:
+        return fail(name + '数据库中没有数据', 404)
+    elif res == 503:
+        return fail('数据查询失败', 503)
+    else:
+        return fail('服务器内部错误', 500, 500)
+
+def put (request, name, oid):
+    hmupName = str2Hump(name)
+    res = query.put(hmupName, oid, request)
+    if isinstance(res, dict):
+        return ok(res)
+    elif res == 400:
+        return fail('参数错误', 400)
+    elif res == 404:
+        return fail('数据库中没有' + name + '这个表', 404)
+    elif res == 503:
+        return fail('数据更新失败', 503)
+    else:
+        return fail('服务器内部错误', 500, 500)
