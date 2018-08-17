@@ -2,6 +2,8 @@
 # -*- coding: UTF-8 -*-
 from sanic.response import json
 from urllib.parse import unquote
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import PKCS1_v1_5 as CPK
 import hashlib
 
 # 成功返回
@@ -42,3 +44,21 @@ def query2Dict(text):
         return obj
     except Exception as e:
         return {}
+
+# 加密方法
+def rsaEncrypt(keypath, string):
+    with open(keypath, 'r') as f:
+        pubkey = f.read()
+        rsaKey = RSA.importKey(pubkey)
+        cipher = CPK.new(rsaKey)
+        res = base64.b64encode(cipher.encrypt(string.encode(encoding="utf-8")))
+        return res.decode(encoding = 'utf-8')
+
+# 解密方法
+def rsaDecrypt(keypath, enCode):
+    with open(keypath, 'r') as f:
+        prikey = f.read()
+        rsaKey = RSA.importKey(prikey)
+        cipher = CPK.new(rsaKey)
+        res = cipher.decrypt(base64.b64decode(enCode), "ERROR")
+        return res.decode(encoding = 'utf-8')
