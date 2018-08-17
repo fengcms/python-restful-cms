@@ -3,11 +3,14 @@
 from sanic import Blueprint
 from sanic.response import json
 from config import PREFIX, ANONYMOUS_API as ANYAPI
+from config import PRIVATE_KEY_PATH 
 
 from core.tool import ok, fail, checkParam
+from core.tool import rsaDecrypt
 from core.session import makeToken, checkToken, clearToken, updataToken
 from core.app import listView, itemView
 from core.handle import middleHandle
+
 
 FIX = PREFIX['be']
 # 创建 蓝图
@@ -36,17 +39,20 @@ async def login(request):
         del res.cookies['session']
         return res
 
+    # 从传参中解密密码
+    password = rsaDecrypt(PRIVATE_KEY_PATH, dat['password'])
+
     # 检查用户名密码是否正确
     if dat['account'] != manageData['username'] \
-            or dat['password'] != manageData['password']:
+            or password != manageData['password']:
         res = fail('用户名或密码错误', 400)
         del res.cookies['session']
         return res
 
     # 正常处理
-    session = makeToken(dat['account'], 'manage')
-    res = ok(session)
-    res.cookies['session'] = session
+    token = makeToken(dat['account'], 'manage')
+    res = ok(token)
+    res.cookies['session'] = token
     res.cookies['session']['httponly'] = True
 
     return res

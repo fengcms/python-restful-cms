@@ -4,6 +4,7 @@ from sanic.response import json
 from urllib.parse import unquote
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_v1_5 as CPK
+import base64
 import hashlib
 
 # 成功返回
