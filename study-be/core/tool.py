@@ -63,3 +63,19 @@ def rsaDecrypt(keypath, enCode):
         cipher = CPK.new(rsaKey)
         res = cipher.decrypt(base64.b64decode(enCode), "ERROR")
         return res.decode(encoding = 'utf-8')
+
+# 下划线转驼峰
+def str2Hump(text):
+    arr = filter(None, text.lower().split('_'))
+    res = ''
+    for i in arr:
+        res =  res + i[0].upper() + i[1:]
+    return res
+
+# 判断数字
+def isInt(num):
+    try:
+        num = int(str(num))
+        return isinstance(num, int)
+    except:
+        return False

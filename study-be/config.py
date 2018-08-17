@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
+import sys
+
+DB_CONN = 'sqlite:///' + sys.path[0] + '/db/news.db'
+
 PREFIX = {
     'be': '/api/v1/be/',
     'fe': '/api/v1/fe/',
