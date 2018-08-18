@@ -2,6 +2,30 @@ from sanic import Sanic
 from sanic.views import HTTPMethodView
 from core.process import doProcess
 from core.tool import fail, query2Dict
+# 使用 pkgutil 模块实现动态加载
+import pkgutil
+
+app = Sanic(__name__)
+
+# 在服务启动之前执行
+@app.listener('before_server_start')
+async def registerModule(app, loop):
+    r = 'process'
+    app.process = {}
+    # 进行第一层循环，加载不同接口前缀对应的模块
+    for x, n, _ in pkgutil.iter_modules([r]):
+        m = x.find_module(r + '.' + n).load_module(r + '.' + n)
+        # 进行第二层循环，加载对应的不同前后处理模块
+        for xx, nn, __ in pkgutil.iter_modules([r + '/' + n]):
+            mm = xx.find_module(r + '.' + n + '.' + nn).\
+                    load_module(r + '.' + n + '.' + nn)
+            # 进行第三层循环，加载前后处理的所有响应模块
+            for xxx, nnn, ___ in pkgutil.iter_modules([r + '/' + n + '/' + nn]):
+                mmm = xxx.find_module(r + '.' + n + '.' + nn + '.' + nnn).\
+                        load_module(r + '.' + n + '.' + nn + '.' + nnn)
+                # 将得到的结果装载到 app.process 以供全局使用
+                app.process[n+nn+nnn] = mmm
+
 
 # restFul 方法列表公用类
 class listView(HTTPMethodView):
@@ -37,4 +61,3 @@ class itemView(HTTPMethodView):
         query = query2Dict(request.query_string)
         return await doProcess(app, name, request, query, 'delete', oid)
 
-app = Sanic(__name__)

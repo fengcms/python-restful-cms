@@ -6,6 +6,7 @@ from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_v1_5 as CPK
 import base64
 import hashlib
+import re
 
 # 成功返回
 def ok(data):
@@ -79,3 +80,8 @@ def isInt(num):
         return isinstance(num, int)
     except:
         return False
+
+def filterHtml(htmlStr):
+    dr = re.compile(r'<[^>]+>', re.S)
+    res = dr.sub('', htmlStr)
+    return res
