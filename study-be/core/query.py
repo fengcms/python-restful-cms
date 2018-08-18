@@ -3,6 +3,10 @@
 
 # 从 db 文件夹中引用 model.py
 from db import model
+# 在配置中，获取默认分页条数参数
+from config import PAGESIZE
+# 从工具中引入判断是否是数字方法
+from core.tool import isInt
 
 session = model.DBSession()
 
@@ -49,17 +53,165 @@ def ls(className, request):
     if not hasClass(className):
         return 404
     try:
-        # 获得数据库类模型
+        # 从请求参数中获取非标准参数
+        args = {}
+        for i in request:
+            i = i.lower()
+            if not i in ['page', 'pagesize', 'sort', 'time']:
+                args[i] = request[i]
+
+        # 获得模型，以及支持的字段数组列表
         classModel = getattr(model, className)
-        res = session.query(classModel).all()
+        modelList = getFieldList(classModel)
+
+        # 开始查询数据
+        res = session.query(classModel)
         
+        # 处理时间参数
+        if 'time' in request:
+            
+            # 将时间参数用短横线拆成数组
+            tArr = request['time'].split('-')
+            
+            # 如果数组长度大于2，就说明传了错误的参数
+            if len(tArr) > 2:
+                return 400
+            
+            # 循环数组，看值是否是数字，否则参数错误
+            for i in tArr:
+                if not isInt(i):
+                    return 400
+            
+            # 如果只有一个数字，则需要根据这个数值计算当天的0点和24点的时间戳
+            if len(tArr) == 1:
+                t = int(tArr[0])
+                
+                # 这个算法完全是用算术来计算的，以中国时区偏差做了调整
+                # 更多内容请搜索时间戳的相关资料
+                st = t - (t + 28800)%86400
+                et = st + 86400
+            else:
+                st = int(tArr[0])
+                et = int(tArr[1])
+                
+            field = getattr(classModel, 'time')
+            res = res.filter(field < et).filter(field >= st)
+
+        # 处理各种非标准参数查询
+        for i in args:
+        
+            # 支持一个条件带多个参数，用英文逗号分割
+            argVal = args[i].split(',')
+            
+            # 参数分为两部分，字段名和方法用短横线分割
+            # 所以，这里把参数用短横线分割成数组
+            arg = i.split('-')
+            
+            # 如果参数名中有多个短横线，则表示参数错误
+            if len(arg) > 2:
+                return 400
+            
+            # 从参数中取出字段名 
+            argField = arg[0]
+            
+            # 取出特殊查询条件。如果没有短横线后面的内容，则为 None
+            argMethod = None if len(arg) == 1 else arg[1]
+            
+            # 字段模型，用 getattr 函数获取
+            field = getattr(classModel, argField)
+            
+            # 检查字段是否是模型支持的
+            if not argField in modelList:
+                return 400
+            
+            # 处理特殊查询条件
+            if argMethod:
+                # 模糊查询
+                if argMethod == 'like':
+                    for val in argVal:
+                        res = res.filter(field.like('%' + val + '%'))
+                # 不等于查询
+                elif argMethod == 'neq':
+                    for val in argVal:
+                        res = res.filter(field != val)
+                # 大于查询
+                elif argMethod == 'gt' and len(argVal) == 1:
+                    res = res.filter(field > argVal[0])
+                # 大于等于查询
+                elif argMethod == 'gteq' and len(argVal) == 1:
+                    res = res.filter(field >= argVal[0])
+                # 小于查询
+                elif argMethod == 'lt' and len(argVal) == 1:
+                    res = res.filter(field < argVal[0])
+                # 小于等于查询
+                elif argMethod == 'lteq' and len(argVal) == 1:
+                    res = res.filter(field <= argVal[0])
+                # in List 查询
+                elif argMethod == 'in':
+                    res = res.filter(field.in_(argVal))
+                # not in List 查询
+                elif argMethod == 'nin':
+                    res = res.filter(~field.in_(argVal))
+                # 其他不支持关键词返回参数错误
+                else:
+                    return 400
+            # 处理普通相等查询条件
+            else:
+                for val in argVal:
+                    res = res.filter(field == val)
+
+        # 获取排序参数
+        sort = 'id' if not 'sort' in request else request['sort']
+
+        # 支持多重条件排序，用英文逗号分隔
+        sortArr = sort.split(',')
+        for i in sortArr:
+            # 根据排序参数第一个字符是否是中划线确定是正序还是倒序，为假倒序
+            sortType = i[0] == '-'
+            sortField = i[1:] if sortType else i
+
+            field = getattr(classModel, sortField)
+
+            if not sortField in modelList:
+                return 400
+                
+            if sortType:
+                res = res.order_by(field)
+            else:
+                res = res.order_by(field.desc())
+
+        # 统计总条数
+        total = res.count()
+
+        # 获取分页序号参数
+        page = 0 if not 'page' in request else request['page']
+        if not isInt(page):
+            return 400
+        else:
+            page = int(page)
+
+        # 获取分页每页数量参数
+        pagesize = PAGESIZE if not 'pagesize' in request else request['pagesize']
+        if not isInt(pagesize):
+            return 400
+        else:
+            pagesize = int(pagesize)
+
+        # 处理分页和分页需要查询 如果 pagesize 为 -1 则全部输出
+        if pagesize == -1:
+            res = res.all()
+        else:
+            res = res.limit(pagesize).offset(page * pagesize)
+
         # 将结果整理成列表输出
         arr = []
         if res:
             for i in res:
                 arr.append(getDict(i))
-        return {'list': arr}
+        return {'list': arr, 'total': total}
+
     except Exception as e:
+        print(e)
         return 503
 
 # 添加新数据方法
@@ -213,5 +365,40 @@ def put(className, oid, data):
         else:
             return {'success': succIds, 'fail': failIds}
 
+    except Exception as e:
+        return 503
+
+# 删除数据方法
+'''
+支持多条数据删除，多条数据删除只需要传多个ID参数即可
+单条示例 xxx/1
+多条示例 xxx/1,2,3,4,5
+返回结果为一个对象，包含俩数组
+success 返回成功删除的的id序列
+fail 返回删除失败的id序列
+如果成功列表长度为 0 则返回参数错误
+'''
+def delete(className, oid):
+    if not hasClass(className):
+        return 404
+        
+    idArr = oid.split(',')
+    succIds = []
+    failIds = []
+    
+    try:
+        classModel = getattr(model, className)
+        for i in idArr:
+            res = session.query(classModel).get(i)
+            if res:
+                session.delete(res)
+                session.commit()
+                succIds.append(i)
+            else:
+                failIds.append(i)
+        if len(succIds) == 0:
+            return 400
+        else:
+            return {'success': succIds, 'fail': failIds}
     except Exception as e:
         return 503

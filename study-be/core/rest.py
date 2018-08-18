@@ -10,6 +10,8 @@ def ls (request, name):
     res = query.ls(hmupName, request)
     if isinstance(res, dict):
         return ok(res)
+    elif res == 400:
+        return fail('参数错误', 400)
     elif res == 404:
         return fail('数据库中没有' + name + '这个表', 404)
     elif res == 503:
@@ -58,5 +60,19 @@ def put (request, name, oid):
         return fail('数据库中没有' + name + '这个表', 404)
     elif res == 503:
         return fail('数据更新失败', 503)
+    else:
+        return fail('服务器内部错误', 500, 500)
+
+def delete (request, name, oid):
+    hmupName = str2Hump(name)
+    res = query.delete(hmupName, oid)
+    if isinstance(res, dict):
+        return ok(res)
+    elif res == 400:
+        return fail('您要删除的数据不存在', 400)
+    elif res == 404:
+        return fail('数据库中没有' + name + '这个表', 404)
+    elif res == 503:
+        return fail('数据删除失败', 503)
     else:
         return fail('服务器内部错误', 500, 500)

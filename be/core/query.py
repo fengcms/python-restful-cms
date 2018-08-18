@@ -289,7 +289,7 @@ def put(className, oid, data):
 
         # 处理不知道ID的单条数据修改
         if oid == 'first':
-            if not checkField(i, fields):
+            if not checkField(data, fields):
                 return 400
 
             putData(res.first(), -1)
@@ -309,7 +309,7 @@ def put(className, oid, data):
 
         # 处理正常单条数据单ID或多ID批量修改
         else:
-            if not checkField(i, fields):
+            if not checkField(data, fields):
                 return 400
 
             idArr = oid.split(',')
