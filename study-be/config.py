@@ -24,3 +24,22 @@ SUPPORT_TYPE = {
     '89504e470d0a1a0a0000':'png',
     '474946383961':'gif',
 }
+
+# 后台接口黑名单
+BLACK_AUTH = {
+    'login': ['LS', 'GET', 'PUT', 'DELETE'],
+    'site': ['GET', 'PUT', 'DELETE'],
+}
+
+# 前台接口白名单
+WHITE_AUTH = {
+    'article': ['LS', 'GET'],
+    'channel': ['LS', 'GET'],
+    'site': ['LS', 'GET'],
+    'author': ['LS', 'GET'],
+    'tags': ['LS', 'GET'],
+    'origin': ['LS', 'GET'],
+    'editor': [],
+    'manages': [],
+    'tree_channel': ['LS'],
+}

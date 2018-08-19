@@ -10,7 +10,7 @@ from config import UPLOAD_PATH, SUPPORT_TYPE
 from core.tool import ok, fail, checkParam, getMd5, rsaDecrypt
 from core.session import makeToken, checkToken, clearToken, updataToken
 from core.app import listView, itemView
-from core.handle import middleHandle
+# from core.handle import middleHandle
 from core import rest
 
 
@@ -22,11 +22,11 @@ bp = Blueprint('be', url_prefix=FIX)
 bp.add_route(listView.as_view(), '<name>')
 bp.add_route(itemView.as_view(), '<name>/<oid>')
 
-@bp.middleware('request')
-async def check(request):
-    rep = middleHandle(request, FIX, ANYAPI)
-    if rep:
-        return rep
+# @bp.middleware('request')
+# async def check(request):
+#     rep = middleHandle(request, FIX, ANYAPI)
+#     if rep:
+#         return rep
 
 # 登录接口
 @bp.route('login', methods=['POST'])
