@@ -33,14 +33,6 @@ def getFieldList(Obj):
             res.append(i)
     return res
 
-# 传入模型，获得该模型字段字典并赋空值，排除id和time，用于post方法
-def getFieldDict(Obj):
-    res = {}
-    for i in dir(Obj):
-        if i[0] != '_' and i != 'id' and i != 'time':
-            res[i] = ''
-    return res
-
 # 检查提交数据字段是否在表中包含方法
 def checkField(dat, fields):
     for i in dat:
@@ -229,13 +221,14 @@ def post(className, request):
         
         # 添加数据
         resIds = []
-        modelDict = getFieldDict(classModel)
         for Data in request['data']:
-            for i in Data:
-                # POST 时传的 id 和 time 字段会被忽略
-                if i != 'id' and i != 'time':
-                    modelDict[i] = Data[i]
-            newData = classModel(**modelDict)
+            # POST 时传的 id 和 time 字段会被忽略
+            if 'id' in Data:
+                Data.pop('id')
+            if 'time' in Data:
+                Data.pop('time')
+                
+            newData = classModel(**Data)
             session.add(newData)
             session.flush()
             session.commit()
@@ -243,6 +236,7 @@ def post(className, request):
         # 将自增ID返回
         return {'id': resIds}
     except Exception as e:
+        print(e)
         return 503
 
 # 查询单条数据方法

@@ -31,8 +31,6 @@ async def registerModule(app, loop):
 class listView(HTTPMethodView):
     async def get(self, request, name):
         query = query2Dict(request.query_string)
-        print(request.query_string)
-        print(query)
         return await doProcess(app, name, request, query, 'ls')
     async def post(self, request, name):
         data = request.json
