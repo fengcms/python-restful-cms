@@ -7,6 +7,11 @@ import sys
 DB_CONN = 'postgresql+pypostgresql://postgres:123456@localhost:5432/news'
 # DB_CONN = 'postgresql+psycopg2://postgres:123456@localhost:5432/news'
 
+REDIS_CONFIG = {
+    'host': 'localhost',
+    'port': 6379,
+}
+
 PREFIX = {
     'be': '/api/v1/be/',
     'fe': '/api/v1/fe/',
