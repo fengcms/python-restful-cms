@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
-from core.tool import ok
+from core.tool import ok, dict2str
 from core import rest
 import json
 # 引入配置文件中的前缀参数
@@ -27,11 +27,20 @@ async def doProcess(app, name, request, query, method, oid=None):
 
         if data:
             return data
+
     # 得到查询结果
     if oid == None:
-        response = getattr(rest, method)(query, name)
+        if method == 'ls':
+            redisKeyName = p + name + dict2str(query)
+            response = getattr(rest, method)(query, name, redisKeyName)
+        else:
+            response = getattr(rest, method)(query, name)
     else:
-        response = getattr(rest, method)(query, name, oid)
+        if method == 'get':
+            redisKeyName = p + name + oid + dict2str(query)
+            response = getattr(rest, method)(query, name, oid, redisKeyName)
+        else:
+            response = getattr(rest, method)(query, name, oid)
 
     resBody = json.loads(response.body)
     resStatus = response.status

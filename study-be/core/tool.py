@@ -85,3 +85,10 @@ def filterHtml(htmlStr):
     dr = re.compile(r'<[^>]+>', re.S)
     res = dr.sub('', htmlStr)
     return res
+
+def dict2str(dictObj):
+    res = ''
+    for i in dictObj:
+        res += i + '='
+        res += dictObj[i] + '-'
+    return res[0:-1]

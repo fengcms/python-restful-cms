@@ -5,6 +5,10 @@
 import json
 from core import query
 from core.tool import ok, fail, str2Hump
+from config import REDIS_CONFIG
+import redis
+
+r = redis.Redis(**REDIS_CONFIG)
 
 def getList (request, name):
     data = json.loads(ls(request, name).body)
@@ -18,9 +22,15 @@ def getItem (name, oid):
         return data['data']
     return 1
 
-def ls (request, name):
+def ls (request, name, key):
     hmupName = str2Hump(name)
-    res = query.ls(hmupName, request)
+
+    if r.get(key):
+        res = eval(r.get(key))
+    else:
+        res = query.ls(hmupName, request)
+        r.set(key, res, ex=5)
+
     if isinstance(res, dict):
         return ok(res)
     elif res == 400:
@@ -46,9 +56,16 @@ def post (request, name):
     else:
         return fail('服务器内部错误', 500, 500)
 
-def get (request, name, oid):
+def get (request, name, oid, key):
     hmupName = str2Hump(name)
-    res = query.get(hmupName, oid)
+
+    if r.get(key):
+        res = eval(r.get(key))
+    else:
+        res = query.get(hmupName, oid)
+        r.set(key, res, ex=5)
+
+    # res = query.get(hmupName, oid)
     if isinstance(res, dict):
         return ok(res)
     elif res == 404:
