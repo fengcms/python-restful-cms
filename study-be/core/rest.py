@@ -8,7 +8,11 @@ from core.tool import ok, fail, str2Hump
 from config import REDIS_CONFIG, REDIS_SPEED_TIME
 import redis
 
-r = redis.Redis(**REDIS_CONFIG)
+try:
+    r = redis.Redis(**REDIS_CONFIG)
+    r.dbsize()
+except:
+    r = None
 
 def getList (request, name):
     data = json.loads(ls(request, name).body)
@@ -25,13 +29,13 @@ def getItem (name, oid):
 def ls (request, name, key, speed):
     hmupName = str2Hump(name)
 
-    if r.get(key) and speed:
+    if r != None and r.get(key) and speed:
         res = json.loads(r.get(key))
         print('get by redis')
     else:
         res = query.ls(hmupName, request)
         print('get by db')
-        if speed:
+        if speed and r != None:
             r.set(key, json.dumps(res), ex=REDIS_SPEED_TIME)
 
     if isinstance(res, dict):
@@ -62,13 +66,13 @@ def post (request, name):
 def get (request, name, oid, key, speed):
     hmupName = str2Hump(name)
 
-    if r.get(key) and speed:
+    if r != None and r.get(key) and speed:
         res = json.loads(r.get(key))
         print('get by redis')
     else:
         res = query.get(hmupName, oid)
         print('get by db')
-        if speed:
+        if speed and r != None:
             r.set(key, json.dumps(res), ex=REDIS_SPEED_TIME)
 
     if isinstance(res, dict):
