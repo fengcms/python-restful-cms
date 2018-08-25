@@ -12,6 +12,10 @@ REDIS_CONFIG = {
     'port': 6379,
 }
 
+REDIS_SPEED_API_PREFIX_LIST = ['/api/v1/fe/']
+
+REDIS_SPEED_TIME = 600
+
 PREFIX = {
     'be': '/api/v1/be/',
     'fe': '/api/v1/fe/',

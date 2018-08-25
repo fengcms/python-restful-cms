@@ -5,7 +5,7 @@
 import json
 from core import query
 from core.tool import ok, fail, str2Hump
-from config import REDIS_CONFIG
+from config import REDIS_CONFIG, REDIS_SPEED_TIME
 import redis
 
 r = redis.Redis(**REDIS_CONFIG)
@@ -22,21 +22,24 @@ def getItem (name, oid):
         return data['data']
     return 1
 
-def ls (request, name, key):
+def ls (request, name, key, speed):
     hmupName = str2Hump(name)
 
-    if r.get(key):
-        res = eval(r.get(key))
+    if r.get(key) and speed:
+        res = json.loads(r.get(key))
+        print('get by redis')
     else:
         res = query.ls(hmupName, request)
-        r.set(key, res, ex=5)
+        print('get by db')
+        if speed:
+            r.set(key, json.dumps(res), ex=REDIS_SPEED_TIME)
 
     if isinstance(res, dict):
         return ok(res)
     elif res == 400:
         return fail('参数错误', 400)
     elif res == 404:
-        return fail('数据库中没有' + name + '这个表', 404)
+        return fail('数据库中没有' + name + '这个表', 404, 404)
     elif res == 503:
         return fail('数据查询失败', 503)
     else:
@@ -50,30 +53,32 @@ def post (request, name):
     elif res == 400:
         return fail('参数错误', 400)
     elif res == 404:
-        return fail('数据库中没有' + name + '这个表', 404)
+        return fail('数据库中没有' + name + '这个表', 404, 404)
     elif res == 503:
         return fail('数据添加失败', 503)
     else:
         return fail('服务器内部错误', 500, 500)
 
-def get (request, name, oid, key):
+def get (request, name, oid, key, speed):
     hmupName = str2Hump(name)
 
-    if r.get(key):
-        res = eval(r.get(key))
+    if r.get(key) and speed:
+        res = json.loads(r.get(key))
+        print('get by redis')
     else:
         res = query.get(hmupName, oid)
-        r.set(key, res, ex=5)
+        print('get by db')
+        if speed:
+            r.set(key, json.dumps(res), ex=REDIS_SPEED_TIME)
 
-    # res = query.get(hmupName, oid)
     if isinstance(res, dict):
         return ok(res)
     elif res == 404:
-        return fail('数据库中没有' + name + '这个表', 404)
+        return fail('数据库中没有' + name + '这个表', 404, 404)
     elif res == 4042:
-        return fail('没有这条数据', 404)
+        return fail('没有这条数据', 404, 404)
     elif res == 4043:
-        return fail(name + '数据库中没有数据', 404)
+        return fail(name + '数据库中没有数据', 404, 404)
     elif res == 503:
         return fail('数据查询失败', 503)
     else:
@@ -87,7 +92,7 @@ def put (request, name, oid):
     elif res == 400:
         return fail('参数错误', 400)
     elif res == 404:
-        return fail('数据库中没有' + name + '这个表', 404)
+        return fail('数据库中没有' + name + '这个表', 404, 404)
     elif res == 503:
         return fail('数据更新失败', 503)
     else:
@@ -101,7 +106,7 @@ def delete (request, name, oid):
     elif res == 400:
         return fail('您要删除的数据不存在', 400)
     elif res == 404:
-        return fail('数据库中没有' + name + '这个表', 404)
+        return fail('数据库中没有' + name + '这个表', 404, 404)
     elif res == 503:
         return fail('数据删除失败', 503)
     else:

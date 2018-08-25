@@ -5,14 +5,18 @@ from core.tool import ok, dict2str
 from core import rest
 import json
 # 引入配置文件中的前缀参数
-from config import PREFIX
+from config import PREFIX, REDIS_SPEED_API_PREFIX_LIST
 
 # 加载前后处理模块
 async def doProcess(app, name, request, query, method, oid=None):
+    speed = False
     # 通过配置前缀字典，获得不同前缀字符串，并替换斜杠为下划线
     for i in PREFIX:
         if i in request.url:
-            p = '_'.join(list(filter(None, PREFIX[i].split('/'))))
+            FIX = PREFIX[i]
+            p = '_'.join(list(filter(None, FIX.split('/'))))
+            if FIX in REDIS_SPEED_API_PREFIX_LIST:
+                speed = True
     
     # 组装前后处理的不同名称
     bm = p + 'before' + name
@@ -32,13 +36,13 @@ async def doProcess(app, name, request, query, method, oid=None):
     if oid == None:
         if method == 'ls':
             redisKeyName = p + name + dict2str(query)
-            response = getattr(rest, method)(query, name, redisKeyName)
+            response = getattr(rest, method)(query, name, redisKeyName, speed)
         else:
             response = getattr(rest, method)(query, name)
     else:
         if method == 'get':
             redisKeyName = p + name + oid + dict2str(query)
-            response = getattr(rest, method)(query, name, oid, redisKeyName)
+            response = getattr(rest, method)(query, name, oid, redisKeyName, speed)
         else:
             response = getattr(rest, method)(query, name, oid)
 
