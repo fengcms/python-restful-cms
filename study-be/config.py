@@ -2,9 +2,9 @@
 # -*- coding: UTF-8 -*-
 import sys
 
-DB_CONN = 'sqlite:///' + sys.path[0] + '/db/news.db'
+#DB_CONN = 'sqlite:///' + sys.path[0] + '/db/news.db'
 # DB_CONN = 'mysql+pymysql://root:123456@localhost:3306/news'
-# DB_CONN = 'postgresql+pypostgresql://postgres:123456@localhost:5432/news'
+DB_CONN = 'postgresql+pypostgresql://postgres:123456@localhost:5432/news'
 # DB_CONN = 'postgresql+psycopg2://postgres:123456@localhost:5432/news'
 
 REDIS_CONFIG = {
@@ -14,7 +14,7 @@ REDIS_CONFIG = {
 
 REDIS_SPEED_API_PREFIX_LIST = ['/api/v1/fe/']
 
-REDIS_SPEED_TIME = 600
+REDIS_SPEED_TIME = 5
 
 PREFIX = {
     'be': '/api/v1/be/',

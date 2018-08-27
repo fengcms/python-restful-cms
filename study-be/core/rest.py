@@ -7,12 +7,9 @@ from core import query
 from core.tool import ok, fail, str2Hump
 from config import REDIS_CONFIG, REDIS_SPEED_TIME
 import redis
+import pickle
 
-try:
-    r = redis.Redis(**REDIS_CONFIG)
-    r.dbsize()
-except:
-    r = None
+r = redis.Redis(**REDIS_CONFIG)
 
 def getList (request, name):
     data = json.loads(ls(request, name).body)
@@ -29,14 +26,19 @@ def getItem (name, oid):
 def ls (request, name, key, speed):
     hmupName = str2Hump(name)
 
-    if r != None and r.get(key) and speed:
-        res = json.loads(r.get(key))
-        print('get by redis')
-    else:
+    try:
+        redisData = r.get(key)
+        if redisData and speed:
+            res = pickle.loads(redisData)
+            print('get by redis')
+        else:
+            res = query.ls(hmupName, request)
+            print('get by db')
+            if speed:
+                r.set(key, pickle.dumps(res), ex=REDIS_SPEED_TIME)
+    except:
+        print('redis error; get by db')
         res = query.ls(hmupName, request)
-        print('get by db')
-        if speed and r != None:
-            r.set(key, json.dumps(res), ex=REDIS_SPEED_TIME)
 
     if isinstance(res, dict):
         return ok(res)
@@ -66,15 +68,20 @@ def post (request, name):
 def get (request, name, oid, key, speed):
     hmupName = str2Hump(name)
 
-    if r != None and r.get(key) and speed:
-        res = json.loads(r.get(key))
-        print('get by redis')
-    else:
+    try:
+        redisData = r.get(key)
+        if redisData and speed:
+            res = pickle.loads(redisData)
+            print('get by redis')
+        else:
+            res = query.get(hmupName, oid)
+            print('get by db')
+            if speed:
+                r.set(key, pickle.dumps(res), ex=REDIS_SPEED_TIME)
+    except:
+        print('redis error; get by db')
         res = query.get(hmupName, oid)
-        print('get by db')
-        if speed and r != None:
-            r.set(key, json.dumps(res), ex=REDIS_SPEED_TIME)
-
+            
     if isinstance(res, dict):
         return ok(res)
     elif res == 404:
