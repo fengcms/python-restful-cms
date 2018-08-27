@@ -9,12 +9,14 @@ from config import PREFIX, REDIS_SPEED_API_PREFIX_LIST
 
 # 加载前后处理模块
 async def doProcess(app, name, request, query, method, oid=None):
+    # 是否需要缓存加速，默认否
     speed = False
     # 通过配置前缀字典，获得不同前缀字符串，并替换斜杠为下划线
     for i in PREFIX:
         if i in request.url:
             FIX = PREFIX[i]
             p = '_'.join(list(filter(None, FIX.split('/'))))
+            # 查看接口是否在加速列表
             if FIX in REDIS_SPEED_API_PREFIX_LIST:
                 speed = True
     
