@@ -88,7 +88,7 @@ def filterHtml(htmlStr):
 
 def dict2str(dictObj):
     res = ''
-    for i in dictObj:
-        res += i + '='
-        res += dictObj[i] + '-'
+    sortKeys = sorted(dictObj.keys())
+    for i in sortKeys:
+        res += i + '=' + str(dictObj[i]) + '-'
     return res[0:-1]
