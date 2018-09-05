@@ -14,7 +14,7 @@ REDIS_CONFIG = {
 
 REDIS_SPEED_API_PREFIX_LIST = ['/api/v1/fe/']
 
-REDIS_SPEED_TIME = 50
+REDIS_SPEED_TIME = 5
 
 PREFIX = {
     'be': '/api/v1/be/',
