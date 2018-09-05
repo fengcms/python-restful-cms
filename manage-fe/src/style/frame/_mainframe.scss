@@ -1,0 +1,22 @@
+.manage_container {
+  height: 100vh;
+  .manage_header {
+    background: #454C53;
+    padding: 0;
+  }
+  .manage_bar {
+    width: 200px !important;
+    background: #545C64;
+  }
+  .manage_body {
+    position: relative;
+    .manage_main {
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      overflow: auto;
+    }
+  }
+}
