@@ -8,6 +8,7 @@ resize-image/target-image
 __pycache__
 nohup.out
 dump.rdb
+node_modules
 
 /news/
 /news_bak/
