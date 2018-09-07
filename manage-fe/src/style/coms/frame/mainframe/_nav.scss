@@ -1,0 +1,18 @@
+.manage_bar {
+  $bgColor: #4A5159;
+  .el-menu {
+    border-right: none;
+    .is-opened {
+      .el-submenu__title {
+        background-color: darken($bgColor,5%) !important;
+      }
+    }
+    .el-submenu__title {
+      background-color: darken($bgColor,2%) !important;
+      border-top: 1px solid lighten($bgColor, 2%);
+      &:hover {
+        background-color: darken($bgColor,4%) !important;
+      }
+    }
+  }
+}
