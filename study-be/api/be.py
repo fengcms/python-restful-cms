@@ -144,3 +144,13 @@ async def upload(request):
 
     # 给客户端返回结果
     return ok({"path": resPath})
+
+# 后台统计接口
+@bp.route('count', methods=['GET'])
+async def count(request):
+    res = {}
+    res['article_count'] = rest.getList({'pagesize': 1}, 'article')['total']
+    res['author_count'] = rest.getList({'pagesize': 1}, 'author')['total']
+    res['origin_count'] = rest.getList({'pagesize': 1}, 'origin')['total']
+    res['tags_count'] = rest.getList({'pagesize': 1}, 'tags')['total']
+    return ok(res)
