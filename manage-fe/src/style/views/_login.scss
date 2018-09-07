@@ -1,0 +1,36 @@
+.manage_login {
+  position: relative;
+  height: 100vh;
+  background: $c55;
+  @include jb($c22, $c55, -45);
+
+  .manage_login_box {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 300px;
+    padding: 30px 50px;
+    @include yd(-50%,-50%);
+    border-radius: 10px;
+    background: $cff;
+    @include jb($cff, $cf4, -45);
+
+    header {
+      height: 50px;
+      text-align: center;
+      font-size: 22px;
+      color: darken($blue, 15%);
+    }
+
+    footer {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -22px;
+      font-size: 12px;
+      text-align: center;
+      color: $c77;
+      @include ts(1px, 1px, $c33);
+    }
+  }
+}

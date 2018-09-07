@@ -1,0 +1,28 @@
+body {
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+}
+
+a {
+  text-decoration:none; cursor: pointer; color: $c55;
+  &:link, &:visited, &:active {}
+  &:hover, &:focus {outline:none;}
+  &:hover {text-decoration: underline; color: $blue;}
+}
+
+.show {display: block;}
+.hide {display: none}
+.clear {clear: both;}
+
+.fl {float: left;}
+.fr {float: right;}
+.tl {text-align: left;}
+.tr {text-align: right;}
+.tc {text-align: center;}
+
+.cf{
+  zoom: 1;
+  &:before, &:after {content:""; display:table;}
+  &:after {clear:both;}
+}
+
+::-webkit-scrollbar {width: 15px;height: 15px;}

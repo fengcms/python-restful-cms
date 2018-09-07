@@ -9,7 +9,7 @@ export default {
     return {}
   },
   created () {
-    this.$api.get('loves', null, r => {
+    this.$api.get('article', null, r => {
       console.log(r)
     })
   }

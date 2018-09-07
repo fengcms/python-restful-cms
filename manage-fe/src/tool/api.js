@@ -1,7 +1,7 @@
 import request from 'superagent'
 
 // 设置接口默认前缀
-const root = '/api/v1/fe/'
+const root = '/api/v1/be/'
 
 // 获取数据类型
 const dataType = data => {
@@ -60,7 +60,7 @@ const ajaxAgent = (method, url, params, success, failure) => {
       failure(res.body, res, 'HTTP_ERROR')
     } else {
       if (res.status === 401) {
-        window.location.href = '/#/login'
+        window.location.href = process.env.BASE_URL + '#/login'
       } else {
         // eslint-disable-next-line no-console
         console.error(err.message)
