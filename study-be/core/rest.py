@@ -23,7 +23,7 @@ def getItem (name, oid):
         return data['data']
     return 1
 
-def ls (request, name, key, speed):
+def ls (request, name, key='redis', speed=False):
     hmupName = str2Hump(name)
 
     try:
@@ -65,7 +65,7 @@ def post (request, name):
     else:
         return fail('服务器内部错误', 500, 500)
 
-def get (request, name, oid, key, speed):
+def get (request, name, oid, key='redis', speed=False):
     hmupName = str2Hump(name)
 
     try:
