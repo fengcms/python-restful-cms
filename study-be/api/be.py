@@ -148,9 +148,21 @@ async def upload(request):
 # 后台统计接口
 @bp.route('count', methods=['GET'])
 async def count(request):
-    res = {}
-    res['article_count'] = rest.getList({'pagesize': 1}, 'article')['total']
-    res['author_count'] = rest.getList({'pagesize': 1}, 'author')['total']
-    res['origin_count'] = rest.getList({'pagesize': 1}, 'origin')['total']
-    res['tags_count'] = rest.getList({'pagesize': 1}, 'tags')['total']
+    res = []
+    res.append({
+            'type': '全站文章数量',
+            'total': rest.getList({'pagesize': 1}, 'article')['total']
+        })
+    res.append({
+            'type': '全站作者总量',
+            'total': rest.getList({'pagesize': 1}, 'author')['total']
+        })
+    res.append({
+            'type': '全站来源总量',
+            'total': rest.getList({'pagesize': 1}, 'origin')['total']
+        })
+    res.append({
+            'type': '全站关键词数量',
+            'total': rest.getList({'pagesize': 1}, 'tags')['total']
+        })
     return ok(res)

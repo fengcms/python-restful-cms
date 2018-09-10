@@ -26,6 +26,7 @@ export default {
       this.$api.get('logout', null, r => {
         this.$router.push('/login')
       }, e => {
+        this.$router.push('/login')
         this.$message.error(e.data)
       })
     }
