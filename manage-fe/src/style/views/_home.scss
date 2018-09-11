@@ -1,0 +1,66 @@
+.manage_home {
+  &_count {
+    @extend .cf;
+    &_item {
+      float: left;
+      // 通过 calc 计算获得宽度
+      @include calc('width', '25% - 20px');
+      height: 100px;
+      margin: 10px;
+      border-radius: 6px;
+      overflow: hidden;
+      // 通过多重阴影模拟双线边框
+      box-shadow: 0 0 0 1px rgba($c00, .1) inset,
+                  0 0 0 2px rgba($cff, .2) inset;
+      // 通过渐变叠加渐变阴影 增加高光
+      @include jb(rgba($cff, .2), transparent, 45);
+
+      // 循环添加不同的背景颜色
+      @each $i, $color in (1: $blue, 2: $orange, 3: $cyan, 4: $green) {
+        &:nth-child(4n + #{$i}) {
+          background-color: $color;
+        }
+      }
+
+      em, span {
+        color: $cff;
+        display: block;
+        text-align: center;
+      }
+      em {
+        height: 72px;
+        line-height: 72px;
+        font-size: 48px;
+        font-style: normal;
+      }
+      span {
+        height: 28px;
+        line-height: 28px;
+        font-size: 14px;
+        background: rgba($c00, .1);
+      }
+    }
+  }
+
+  &_list {
+    @extend .cf;
+    &_item {
+      float: left;
+      @include calc('width', '100% / 3 - 20px');
+      margin: 10px;
+      border-radius: 6px;
+      box-shadow: 0 0 5px $c99;
+
+      h3 {
+        font-size: 16px;
+        padding: 14px;
+        margin: 0;
+        border-bottom: 1px solid $cdd;
+      }
+
+      ol {
+        line-height: 1.6;
+      }
+    }
+  }
+}
