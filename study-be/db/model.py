@@ -78,6 +78,7 @@ class Author(Base):
     mobile = Column(String(255))
     email = Column(String(255))
     website = Column(String(255))
+    hits = Column(Integer)
     time = Column(Integer, default=int(time.time()))
 
 class Origin(Base):

@@ -4,6 +4,8 @@ import Home from '@/views/home.vue'
 import Login from '@/views/login.vue'
 import MainFrame from '@/frame/main_frame.vue'
 
+import Auxiliary from './auxiliary.js'
+
 Vue.use(Router)
 
 export default new Router({
@@ -15,6 +17,11 @@ export default new Router({
       children: [
         { path: '', component: Home }
       ]
+    },
+    {
+      path: '/auxiliary',
+      component: MainFrame,
+      children: Auxiliary
     }
   ]
 })

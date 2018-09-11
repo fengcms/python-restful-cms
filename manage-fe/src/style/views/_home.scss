@@ -1,6 +1,7 @@
 .manage_home {
   &_count {
     @extend .cf;
+    min-height: 100px;
     &_item {
       float: left;
       // 通过 calc 计算获得宽度
@@ -60,6 +61,7 @@
 
       ol {
         line-height: 1.6;
+        min-height: 50px;
       }
     }
   }
