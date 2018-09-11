@@ -11,19 +11,19 @@ import pickle
 
 r = redis.Redis(**REDIS_CONFIG)
 
-def getList (request, name):
-    data = json.loads(ls(request, name).body)
+def getList (request, name, key=None, speed=False):
+    data = json.loads(ls(request, name, key, speed).body)
     if data['status'] == 0:
         return data['data']
     return 1
 
-def getItem (name, oid):
-    data = json.loads(get({}, name, oid).body)
+def getItem (name, oid, key=None, speed=False):
+    data = json.loads(get({}, name, oid, key, speed).body)
     if data['status'] == 0:
         return data['data']
     return 1
 
-def ls (request, name, key='redis', speed=False):
+def ls (request, name, key=None, speed=False):
     hmupName = str2Hump(name)
 
     try:
@@ -65,7 +65,7 @@ def post (request, name):
     else:
         return fail('服务器内部错误', 500, 500)
 
-def get (request, name, oid, key='redis', speed=False):
+def get (request, name, oid, key=None, speed=False):
     hmupName = str2Hump(name)
 
     try:

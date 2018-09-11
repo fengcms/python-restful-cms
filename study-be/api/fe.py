@@ -17,7 +17,12 @@ bp.add_route(itemView.as_view(), '<name>/<oid>')
 
 @bp.route('tree_channel', methods=['GET'])
 async def tree_channel(request):
-    sourceData = rest.getList({'pagesize': -1, 'sort': '-sort,-id'}, 'channel')
+    sourceData = rest.getList(
+                {'pagesize': -1, 'sort': '-sort,-id'},
+                'channel',
+                'treeChannel',
+                True
+            )
     if sourceData == 1:
         return fail('服务器内部错误', 500, 500)
     if sourceData['total'] < 1:
