@@ -1,0 +1,37 @@
+.manage_main {
+  &_topline {
+    height: 57px;
+    &_fixed {
+      @extend .cf;
+      height: 40px;
+      position: fixed;
+      top: 60px;
+      left: 200px;
+      right: 0;
+      padding: 8px 10px;
+      background: $cf7;
+      border-bottom: 1px solid $cdd;
+    }
+    &_btns {
+      float: left;
+    }
+    &_breadcrumb {
+      float: right;
+      padding-top: 13px;
+    }
+  }
+  &_search {
+    .el-form-item--small.el-form-item {
+      margin-bottom: 0;
+    }
+    padding: 10px;
+    margin-bottom: 10px;
+    background: $cf7;
+    border-radius: 8px;
+  }
+  &_list {}
+  &_pagination {
+    padding: 10px 0;
+    text-align: right;
+  }
+}

@@ -10,9 +10,7 @@
         <Nav></Nav>
       </el-aside>
       <el-container class="manage_body">
-        <div class="manage_main">
-          <router-view />
-        </div>
+        <router-view class="manage_main" />
       </el-container>
     </el-container>
   </el-container>
