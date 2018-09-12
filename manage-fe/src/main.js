@@ -4,6 +4,7 @@ import router from '@/router/main.js'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import Api from '@/tool/api'
+import Coms from '@/coms/coms'
 
 Vue.use(ElementUI)
 
@@ -13,5 +14,5 @@ Vue.config.productionTip = false
 
 new Vue({
   router,
-  render: h => h(App)
+  render: h => h(App, Coms)
 }).$mount('#app')

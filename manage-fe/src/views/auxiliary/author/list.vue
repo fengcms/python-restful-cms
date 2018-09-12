@@ -10,12 +10,7 @@
           </el-button-group>
         </div>
         <!-- 面包屑 -->
-        <div class="manage_main_topline_breadcrumb">
-          <el-breadcrumb separator="/">
-            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>作者管理</el-breadcrumb-item>
-          </el-breadcrumb>
-        </div>
+        <Breadcrumb :bread="['辅助管理', '作者管理-/auxiliary/author']"></Breadcrumb>
       </div>
     </div>
     <!-- 搜索区域 -->
@@ -37,12 +32,10 @@
       </el-table>
     </div>
     <!-- 分页区域 -->
-    <div class="manage_main_pagination">
-      <el-pagination
-        background
-        layout="prev, pager, next"
-        :total="1000">
-      </el-pagination>
-    </div>
+    <Pagination :total="50"></Pagination>
   </div>
 </template>
+<script>
+export default {
+}
+</script>
