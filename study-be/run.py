@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
-#!/usr/bin/env python3                                                                                                           # -*- coding: UTF-8 -*-
+
 from api import be, fe
 from core.app import app
 from core.tool import fail
