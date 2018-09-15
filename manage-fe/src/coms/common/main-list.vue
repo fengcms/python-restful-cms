@@ -8,22 +8,20 @@
         :prop="i.field"
         :align="i.align ? i.align : 'left'"
         :width="i.width ? i.width : 'auto'"
-        >
+      >
       </el-table-column>
       <el-table-column label="操作" width="180">
         <template slot-scope="scope">
           <el-button type="primary" size="mini"
             v-if="control.indexOf('edit') !== -1"
             @click="$router.push(`${api}/edit/${scope.row.id}`)"
-            icon="el-icon-edit">
-            编辑
-          </el-button>
+            icon="el-icon-edit"
+          >编辑</el-button>
           <el-button type="danger" size="mini"
             v-if="control.indexOf('delete') !== -1"
             @click="deleteItem(scope.row)"
-            icon="el-icon-delete">
-            删除
-          </el-button>
+            icon="el-icon-delete"
+          >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
