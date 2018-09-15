@@ -6,11 +6,11 @@
         <div class="manage_main_topline_btns">
           <el-button-group>
             <el-button type="info" @click="$router.go(-1)" icon="el-icon-arrow-left">返回</el-button>
-            <el-button type="primary" icon="el-icon-check">保存作者</el-button>
+            <el-button type="primary" icon="el-icon-check" @click="onSubmit()">保存作者</el-button>
           </el-button-group>
         </div>
         <!-- 面包屑 -->
-        <Breadcrumb :bread="['辅助管理', '作者管理-/auxiliary/author', '编辑作者']"></Breadcrumb>
+        <breadcrumb :bread="['辅助管理', '作者管理-/auxiliary/author', '编辑作者']"></breadcrumb>
       </div>
     </div>
     <el-form
@@ -58,6 +58,7 @@ export default {
           // 提交数据
           this.$api.post('author', this.dat, r => {
             this.$message.success('添加成功')
+            this.$route.push('../')
           }, e => {
             this.$message.error(e.data)
           })

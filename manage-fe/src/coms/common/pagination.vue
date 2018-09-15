@@ -3,6 +3,7 @@
     <el-pagination
       background
       layout="prev, pager, next"
+      @current-change="change"
       :total="total">
     </el-pagination>
   </div>
@@ -12,7 +13,11 @@
 export default {
   name: 'pagination',
   props: {
-    total: Number
+    total: Number,
+    change: {
+      type: Function,
+      default: () => {}
+    }
   }
 }
 </script>
