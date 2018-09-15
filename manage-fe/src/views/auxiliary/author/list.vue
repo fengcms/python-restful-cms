@@ -5,19 +5,7 @@
       <el-button type="danger" @click="batchDelete()" icon="el-icon-delete">批量删除</el-button>
     </main-topline>
     <!-- 搜索区域 -->
-    <div class="manage_main_search">
-      <el-form size="small" :inline="true">
-        <el-form-item label="作者姓名">
-          <el-input v-model="search['name-like']"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="getData()">查询</el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="restData()">重置</el-button>
-        </el-form-item>
-      </el-form>
-    </div>
+    <main-search :search="search" :field="base.search_field" :goSearch="getData" :goRest="restData"></main-search>
     <!-- 列表区域 -->
     <div class="manage_main_list">
       <el-table :data="dat.list" style="width: 100%" @selection-change="selectData">
@@ -29,14 +17,14 @@
         <el-table-column label="个人网站" prop="website"></el-table-column>
         <el-table-column label="操作" width="180">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" icon="el-icon-edit">编辑</el-button>
+            <el-button type="primary" size="mini" @click="$router.push(`${api}/edit/${scope.row.id}`)" icon="el-icon-edit">编辑</el-button>
             <el-button type="danger" size="mini" @click="deleteItem(scope.row)" icon="el-icon-delete">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
     <!-- 分页区域 -->
-    <pagination :total="dat.total" :change="changePage()"></pagination>
+    <pagination :total="dat.total" :change="changePage"></pagination>
   </div>
 </template>
 <script>
@@ -45,10 +33,10 @@ export default {
     return {
       api: 'author',
       dat: { list: [], total: 0 },
-      search: null,
-      base_search: {
-        page: 0,
-        'name-like': ''
+      search: {},
+      base: {
+        search: { page: 0, 'name-like': '' },
+        search_field: [{ field: 'name-like', label: '作者姓名' }]
       },
       select_id: []
     }
@@ -63,10 +51,8 @@ export default {
       })
     },
     restData () {
-      let { ...o } = this.base_search
-      console.log(o)
+      let { ...o } = this.base.search
       this.search = o
-      console.log(o)
       this.getData()
     },
     changePage (page) {
