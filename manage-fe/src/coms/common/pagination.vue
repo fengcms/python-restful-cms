@@ -10,6 +10,7 @@
 
 <script>
 export default {
+  name: 'pagination',
   props: {
     total: Number
   }

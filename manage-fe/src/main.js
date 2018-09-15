@@ -7,6 +7,7 @@ import Api from '@/tool/api'
 import Coms from '@/coms/coms'
 
 Vue.use(ElementUI)
+Vue.use(Coms)
 
 Vue.prototype.$api = Api
 
@@ -14,5 +15,5 @@ Vue.config.productionTip = false
 
 new Vue({
   router,
-  render: h => h(App, Coms)
+  render: h => h(App)
 }).$mount('#app')

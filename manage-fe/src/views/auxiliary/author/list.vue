@@ -10,7 +10,7 @@
           </el-button-group>
         </div>
         <!-- 面包屑 -->
-        <Breadcrumb :bread="['辅助管理', '作者管理-/auxiliary/author']"></Breadcrumb>
+        <breadcrumb :bread="['辅助管理', '作者管理-/auxiliary/author']"></breadcrumb>
       </div>
     </div>
     <!-- 搜索区域 -->
@@ -42,7 +42,7 @@
       </el-table>
     </div>
     <!-- 分页区域 -->
-    <Pagination :total="dat.total"></Pagination>
+    <!-- <pagination :total="dat.total"></pagination> -->
   </div>
 </template>
 <script>
