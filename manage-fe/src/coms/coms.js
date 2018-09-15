@@ -4,11 +4,12 @@ import Vue from 'vue'
 import breadcrumb from './common/breadcrumb.vue'
 import mainTopline from './common/main-topline.vue'
 import mainSearch from './common/main-search.vue'
+import mainList from './common/main-list.vue'
 import pagination from './common/pagination.vue'
 
 // 将我们的自定义组件构建成数组
 const coms = [
-  breadcrumb, mainTopline, mainSearch, pagination
+  breadcrumb, mainTopline, mainSearch, mainList, pagination
 ]
 
 // 循环注册组件
@@ -21,5 +22,6 @@ export default {
   breadcrumb,
   pagination,
   mainTopline,
-  mainSearch
+  mainSearch,
+  mainList
 }
