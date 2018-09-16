@@ -3,7 +3,8 @@ export default {
     return {
       dat: { list: [], total: 0 },
       search: {},
-      select_id: []
+      select_id: [],
+      loading: true
     }
   },
   created () {
@@ -11,8 +12,10 @@ export default {
   },
   methods: {
     getData () {
+      this.loading = true
       this.$api.get(this.api, this.search, r => {
         this.dat = r.data
+        this.loading = false
       })
     },
     restData () {

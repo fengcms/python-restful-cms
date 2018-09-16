@@ -8,6 +8,7 @@
     <main-search :search="search" :field="base.search_field" :goSearch="getData" :goRest="restData"></main-search>
     <!-- 列表区域 -->
     <main-list
+      v-loading="loading"
       :api="api"
       :field="base.list_field"
       :data="dat.list"

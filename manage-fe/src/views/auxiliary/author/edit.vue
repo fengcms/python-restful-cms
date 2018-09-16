@@ -5,6 +5,7 @@
       <el-button type="primary" icon="el-icon-check" @click="onSubmit()">保存作者</el-button>
     </main-topline>
     <el-form
+      v-loading="loading"
       label-width="100px"
       :model="dat"
       :rules="rules"
@@ -33,53 +34,18 @@
 </template>
 <script>
 import rules from '@/tool/rules'
+import mixinEdit from '@/mixin/edit.js'
 export default {
+  mixins: [mixinEdit],
   data () {
     return {
       api: 'author',
       id: this.$route.params.id,
-      dat: {},
       rules: rules('name,mobile,email,website,hits'),
       base: {
-        dat: { name: null, mobile: null, email: null, website: null, hits: 0 }
+        dat: { name: null, mobile: null, email: null, website: null, hits: 0 },
+        list_url: '/auxiliary/author'
       }
-    }
-  },
-  created () {
-    this.getData()
-  },
-  methods: {
-    getData () {
-      if (this.id) {
-        this.$api.get(`${this.api}/${this.id}`, null, r => {
-          this.dat = r.data
-        })
-      } else {
-        let { ...o } = this.base.dat
-        this.dat = o
-      }
-    },
-    onSubmit () {
-      // 校验数据是否符合验证规则
-      this.$refs['ref'].validate((valid) => {
-        // 通过验证
-        if (valid) {
-          // 提交数据
-          if (this.id) {
-            // 编辑模式
-            this.$api.put(`${this.api}/${this.id}`, this.dat, r => {
-              this.$message.success('编辑成功')
-              this.$router.push('/auxiliary/author')
-            })
-          } else {
-            // 添加模式
-            this.$api.post(this.api, this.dat, r => {
-              this.$message.success('添加成功')
-              this.$router.push('/auxiliary/author')
-            })
-          }
-        }
-      })
     }
   }
 }
