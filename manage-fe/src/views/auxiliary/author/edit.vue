@@ -1,18 +1,9 @@
 <template>
   <div>
-    <div class="manage_main_topline">
-      <div class="manage_main_topline_fixed">
-        <!-- 按钮组 -->
-        <div class="manage_main_topline_btns">
-          <el-button-group>
-            <el-button type="info" @click="$router.go(-1)" icon="el-icon-arrow-left">返回</el-button>
-            <el-button type="primary" icon="el-icon-check" @click="onSubmit()">保存作者</el-button>
-          </el-button-group>
-        </div>
-        <!-- 面包屑 -->
-        <breadcrumb :bread="['辅助管理', '作者管理-/auxiliary/author', '编辑作者']"></breadcrumb>
-      </div>
-    </div>
+    <main-topline :bread="['辅助管理', '作者管理-/auxiliary/author', '编辑详情']">
+      <el-button type="info" @click="$router.go(-1)" icon="el-icon-arrow-left">返回</el-button>
+      <el-button type="primary" icon="el-icon-check" @click="onSubmit()">保存作者</el-button>
+    </main-topline>
     <el-form
       label-width="100px"
       :model="dat"
@@ -23,7 +14,7 @@
         <el-input v-model="dat.name"></el-input>
       </el-form-item>
       <el-form-item label="作者手机：" prop="mobile">
-        <el-input v-model="dat.mobile"></el-input>
+        <el-input v-model="dat.mobile" :maxlength="11"></el-input>
       </el-form-item>
       <el-form-item label="作者邮箱：" prop="email">
         <el-input v-model="dat.email"></el-input>
@@ -45,23 +36,48 @@ import rules from '@/tool/rules'
 export default {
   data () {
     return {
-      dat: { name: null, mobile: null, email: null, website: null, hits: 0 },
-      rules: rules('name,mobile,email,website,hits')
+      api: 'author',
+      id: this.$route.params.id,
+      dat: {},
+      rules: rules('name,mobile,email,website,hits'),
+      base: {
+        dat: { name: null, mobile: null, email: null, website: null, hits: 0 }
+      }
     }
   },
+  created () {
+    this.getData()
+  },
   methods: {
+    getData () {
+      if (this.id) {
+        this.$api.get(`${this.api}/${this.id}`, null, r => {
+          this.dat = r.data
+        })
+      } else {
+        let { ...o } = this.base.dat
+        this.dat = o
+      }
+    },
     onSubmit () {
       // 校验数据是否符合验证规则
       this.$refs['ref'].validate((valid) => {
         // 通过验证
         if (valid) {
           // 提交数据
-          this.$api.post('author', this.dat, r => {
-            this.$message.success('添加成功')
-            this.$route.push('../')
-          }, e => {
-            this.$message.error(e.data)
-          })
+          if (this.id) {
+            // 编辑模式
+            this.$api.put(`${this.api}/${this.id}`, this.dat, r => {
+              this.$message.success('编辑成功')
+              this.$router.push('/auxiliary/author')
+            })
+          } else {
+            // 添加模式
+            this.$api.post(this.api, this.dat, r => {
+              this.$message.success('添加成功')
+              this.$router.push('/auxiliary/author')
+            })
+          }
         }
       })
     }

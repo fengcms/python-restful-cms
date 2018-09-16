@@ -1,10 +1,10 @@
 const rules = {
   name: [
-    { required: true, message: '请输入作者姓名', trigger: 'blur' },
-    { max: 20, message: '作者姓名长度过长', trigger: 'blur' }
+    { required: true, message: '请输入姓名', trigger: 'blur' },
+    { max: 20, message: '姓名长度过长', trigger: 'blur' }
   ],
   mobile: [
-    { pattern: /^1[34578]\d{9}$/, message: '请输入作者手机号', trigger: 'blur' }
+    { pattern: /^1[34578]\d{9}$/, message: '手机号格式不正确', trigger: 'blur' }
   ],
   email: [
     { type: 'email', message: '电子邮箱格式不正确', trigger: 'blur' }

@@ -20,12 +20,12 @@
   </div>
 </template>
 <script>
+import mixinList from '@/mixin/list.js'
 export default {
+  mixins: [mixinList],
   data () {
     return {
       api: 'author',
-      dat: { list: [], total: 0 },
-      search: {},
       base: {
         search: { page: 0, 'name-like': '', 'mobile': '' },
         search_field: [
@@ -40,37 +40,7 @@ export default {
           { field: 'website', label: '个人网站' }
         ],
         list_control: ['edit', 'delete']
-      },
-      select_id: []
-    }
-  },
-  created () {
-    this.restData()
-  },
-  methods: {
-    getData () {
-      this.$api.get(this.api, this.search, r => {
-        this.dat = r.data
-      })
-    },
-    restData () {
-      let { ...o } = this.base.search
-      this.search = o
-      this.getData()
-    },
-    changePage (page) {
-      this.search.page = page - 1
-      this.getData()
-    },
-    selectData (val) {
-      this.select_id = []
-      for (let i of val) this.select_id.push(i.id)
-    },
-    batchDelete () {
-      this.$api.delete(`${this.api}/${this.select_id.join(',')}`, null, r => {
-        this.getData()
-        this.$message.success('批量删除成功')
-      })
+      }
     }
   }
 }
