@@ -54,7 +54,7 @@ export default {
               url: '/auxiliary/author'
             }, {
               name: '来源管理',
-              url: '/auxiliary/source'
+              url: '/auxiliary/origin'
             }, {
               name: '关键词管理',
               url: '/auxiliary/keywords'
