@@ -3,6 +3,10 @@ const rules = {
     { required: true, message: '请输入名称', trigger: 'blur' },
     { max: 20, message: '名称长度过长', trigger: 'blur' }
   ],
+  tag: [
+    { required: true, message: '请输入关键词', trigger: 'blur' },
+    { max: 20, message: '关键词长度过长', trigger: 'blur' }
+  ],
   contact: [
     { max: 20, message: '联系人长度过长', trigger: 'blur' }
   ],

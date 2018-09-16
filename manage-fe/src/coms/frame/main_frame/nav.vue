@@ -57,7 +57,7 @@ export default {
               url: '/auxiliary/origin'
             }, {
               name: '关键词管理',
-              url: '/auxiliary/keywords'
+              url: '/auxiliary/tags'
             }
           ]
         }, {
