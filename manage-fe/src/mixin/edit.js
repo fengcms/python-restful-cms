@@ -43,12 +43,16 @@ export default {
             this.$api.put(`${this.api}/${this.id}`, this.submitDat, r => {
               this.$message.success('编辑成功')
               this.$router.push(this.base.list_url)
+            }, e => {
+              this.$message.error(e.data)
             })
           } else {
             // 添加模式
             this.$api.post(this.api, this.submitDat, r => {
               this.$message.success('添加成功')
               this.$router.push(this.base.list_url)
+            }, e => {
+              this.$message.error(e.data)
             })
           }
         }
