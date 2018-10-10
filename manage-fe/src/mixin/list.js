@@ -16,6 +16,9 @@ export default {
       this.$api.get(this.api, this.search, r => {
         this.dat = r.data
         this.loading = false
+      }, e => {
+        this.loading = false
+        this.$message.error(e.data)
       })
     },
     restData () {
@@ -35,6 +38,8 @@ export default {
       this.$api.delete(`${this.api}/${this.select_id.join(',')}`, null, r => {
         this.getData()
         this.$message.success('批量删除成功')
+      }, e => {
+        this.$message.error(e.data)
       })
     }
   }

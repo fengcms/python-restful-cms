@@ -69,7 +69,7 @@ export default {
               url: '/system/site'
             }, {
               name: '管理员管理',
-              url: '/system/manage'
+              url: '/system/manages'
             }
           ]
         }
