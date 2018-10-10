@@ -66,7 +66,7 @@ export default {
           children: [
             {
               name: '系统设置',
-              url: '/system/setting'
+              url: '/system/site'
             }, {
               name: '管理员管理',
               url: '/system/manage'

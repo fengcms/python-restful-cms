@@ -5,6 +5,7 @@ import Login from '@/views/login.vue'
 import MainFrame from '@/frame/main_frame.vue'
 
 import Auxiliary from './auxiliary.js'
+import System from './system.js'
 
 Vue.use(Router)
 
@@ -22,6 +23,11 @@ export default new Router({
       path: '/auxiliary',
       component: MainFrame,
       children: Auxiliary
+    },
+    {
+      path: '/system',
+      component: MainFrame,
+      children: System
     }
   ]
 })
