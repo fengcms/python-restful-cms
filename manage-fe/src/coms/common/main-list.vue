@@ -50,6 +50,8 @@ export default {
       this.$api.delete(`${this.api}/${row.id}`, null, r => {
         this.getData()
         this.$message.success('删除成功')
+      }, e => {
+        this.$message.error(e.data)
       })
     }
   }
